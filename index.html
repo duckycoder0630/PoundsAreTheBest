@@ -5,60 +5,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pounds Weight Converter</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 50px; }
-        .converter-box { max-width: 300px; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
-        label, input, select, button { display: block; width: 100%; margin-bottom: 15px; padding: 8px; box-sizing: border-box; }
-        #result { font-weight: bold; font-size: 1.2em; color: #333; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .results-title {
+            margin-top: 25px;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #777;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 18px;
+        }
+        .unit-name {
+            color: #666;
+        }
+        .unit-value {
+            font-weight: bold;
+            color: #222;
+        }
     </style>
 </head>
 <body>
 
-<div class="converter-box">
-    <h2>Weight Converter</h2>
+<div class="card">
+    <h2>Pounds (lbs) Converter</h2>
     
-    <label for="poundsInput">Pounds (lbs):</label>
-    <input type="number" id="poundsInput" placeholder="Enter weight in lbs" value="1">
+    <div class="input-group">
+        <label for="poundsInput">Enter Weight in Pounds (lbs):</label>
+        <input type="number" id="poundsInput" value="1" placeholder="0" min="0" step="any">
+    </div>
 
-    <label for="unitSelect">Convert to:</label>
-    <select id="unitSelect">
-        <option value="kilograms">Kilograms (kg)</option>
-        <option value="ounces">Ounces (oz)</option>
-        <option value="grams">Grams (g)</option>
-        <option value="stones">Stones (st)</option>
-    </select>
-
-    <button onclick="convertWeight()">Convert</button>
-
-    <div id="result">Result: </div>
+    <div class="results-title">All Conversions</div>
+    <div id="resultsContainer"></div>
 </div>
 
 <script>
-// JSON object storing the conversion factors (1 pound equals...)
-const conversionRates = {
-    "kilograms": 0.45359237,
-    "ounces": 16,
-    "grams": 453.59237,
-    "stones": 0.07142857
-};
+    // JSON object storing conversion factors relative to 1 Pound (lbs)
+    const conversionRatesJSON = {
+        "Kilograms (kg)": 0.45359237,
+        "Grams (g)": 453.59237,
+        "Ounces (oz)": 16,
+        "Stones (st)": 0.07142857,
+        "Milligrams (mg)": 453592.37,
+        "US Tons (ton)": 0.0005
+    };
 
-function convertWeight() {
-    // Get values from the UI
-    const pounds = parseFloat(document.getElementById('poundsInput').value);
-    const targetUnit = document.getElementById('unitSelect').value;
-    
-    // Validate input
-    if (isNaN(pounds)) {
-        document.getElementById('result').innerText = "Please enter a valid number.";
-        return;
+    const poundsInput = document.getElementById('poundsInput');
+    const resultsContainer = document.getElementById('resultsContainer');
+
+    // Function to calculate and render all units
+    function convertWeight() {
+        const pounds = parseFloat(poundsInput.value);
+        
+        // Handle empty or invalid inputs gracefully
+        if (isNaN(pounds)) {
+            resultsContainer.innerHTML = '<div style="color:#999; padding: 10px 0;">Enter a valid number to see conversions.</div>';
+            return;
+        }
+
+        let htmlContent = '';
+
+        // Loop through the JSON object properties
+        for (const [unit, factor] of Object.entries(conversionRatesJSON)) {
+            const convertedValue = pounds * factor;
+            
+            // Format to 4 decimal places, dropping unnecessary trailing zeros
+            const formattedValue = parseFloat(convertedValue.toFixed(4));
+
+            htmlContent += `
+                <div class="result-item">
+                    <span class="unit-name">${unit}</span>
+                    <span class="unit-value">${formattedValue}</span>
+                </div>
+            `;
+        }
+
+        resultsContainer.innerHTML = htmlContent;
     }
 
-    // Fetch the multiplier from the JSON object
-    const factor = conversionRates[targetUnit];
-    
-    // Calculate and display result
-    const calculatedValue = (pounds * factor).toFixed(4);
-    document.getElementById('result').innerText = `Result: ${calculatedValue} ${targetUnit}`;
-}
+    // Event listeners to update results instantly on user input
+    poundsInput.addEventListener('input', convertWeight);
+
+    // Initial run on page load
+    convertWeight();
 </script>
 
 </body>
