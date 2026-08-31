@@ -117,7 +117,7 @@
         "Shematy (shȝts)": 59.814378,
         "Firkins (firkin)": 0.017857142857142856,
         "Atomic Mass Units (u)": 2.731595236E+26,
-        "Earths'Mass": 7.590233768E-26,
+        "Earth's Mass": 7.590233768E-26,
         "Sun's Mass": 2.267961849E-31,
         "Deuteron Mass": 1.356604465E+26,
         "Nuetron Mass": 2.708129588E+26,
@@ -145,7 +145,7 @@
             const convertedValue = pounds * factor;
             
             // Format to 4 decimal places, dropping unnecessary trailing zeros
-            const formattedValue = parseFloat(convertedValue.toFixed(4));
+            const formattedValue = parseFloat(convertedValue.toFixed(6));
 
             htmlContent += `
                 <div class="result-item">
@@ -161,7 +161,6 @@
     // Event listeners to update results instantly on user input
     poundsInput.addEventListener('input', convertWeight);
 
-    // Initial run on page load
     convertWeight();
 </script>
 
