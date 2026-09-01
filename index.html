@@ -79,7 +79,6 @@
 </div>
 
 <script>
-    // JSON object storing conversion factors relative to 1 Pound (lbs)
     const conversionRatesJSON = {
         "Yottagrams (Yg)": 453.59237/1000000000000000000000000,
         "Zettagrams (Zg)": 453.59237/1000000000000000000000,
@@ -130,11 +129,9 @@
     const poundsInput = document.getElementById('poundsInput');
     const resultsContainer = document.getElementById('resultsContainer');
 
-    // Function to calculate and render all units
     function convertWeight() {
         const pounds = parseFloat(poundsInput.value);
         
-        // Handle empty or invalid inputs gracefully
         if (isNaN(pounds)) {
             resultsContainer.innerHTML = '<div style="color:#999; padding: 10px 0;">Enter a valid number to see conversions.</div>';
             return;
@@ -142,11 +139,9 @@
 
         let htmlContent = '';
 
-        // Loop through the JSON object properties
         for (const [unit, factor] of Object.entries(conversionRatesJSON)) {
             const convertedValue = pounds * factor;
             
-            // Format to 4 decimal places, dropping unnecessary trailing zeros
             const formattedValue = parseFloat(convertedValue.toFixed(31));
 
             htmlContent += `
@@ -160,7 +155,6 @@
         resultsContainer.innerHTML = htmlContent;
     }
 
-    // Event listeners to update results instantly on user input
     poundsInput.addEventListener('input', convertWeight);
 
     convertWeight();
